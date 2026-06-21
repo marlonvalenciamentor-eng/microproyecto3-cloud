@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body { font-family: Calibri, Arial, sans-serif; font-size: 12pt; margin: 2cm; color: #000; line-height: 1.5; }
+    h1 { font-size: 16pt; text-align: center; font-weight: bold; color: #1F3864; margin-bottom: 6px; }
+    h2 { font-size: 14pt; font-weight: bold; color: #1F3864; border-bottom: 2px solid #1F3864; padding-bottom: 4px; margin-top: 28px; }
+    h3 { font-size: 12pt; font-weight: bold; color: #2E5DA6; margin-top: 16px; }
+    .portada { text-align: center; margin-top: 60px; margin-bottom: 60px; }
+    .portada p { margin: 8px 0; }
+    table { border-collapse: collapse; width: 100%; margin: 14px 0; }
+    th { background-color: #1F3864; color: white; padding: 9px; text-align: left; }
+    td { border: 1px solid #ccc; padding: 8px; vertical-align: top; }
+    tr:nth-child(even) { background-color: #f2f2f2; }
+    .pagebreak { page-break-before: always; }
+    ul li { margin: 5px 0; }
+    p { text-align: justify; }
+    .pipeline-row { display: flex; align-items: center; justify-content: center; margin: 4px 0; flex-wrap: wrap; }
+    .box { color: white; padding: 8px 14px; border-radius: 6px; font-size: 10pt; font-weight: bold; text-align: center; min-width: 150px; margin: 4px; }
+    .box-data { background-color: #0078D4; }
+    .box-process { background-color: #107C10; }
+    .box-model { background-color: #881798; }
+    .box-eval { background-color: #D83B01; }
+    .box-deploy { background-color: #004B50; }
+    .arrow { font-size: 18pt; color: #666; margin: 0 4px; }
+    .arrow-down { font-size: 22pt; color: #666; text-align: center; }
+    .arch-diagram { border: 2px solid #1F3864; border-radius: 8px; padding: 16px; background: #f8f9ff; margin: 16px 0; }
+    .arch-section { border: 1px dashed #888; border-radius: 6px; padding: 10px; margin: 8px 0; }
+    .arch-section-title { font-weight: bold; font-size: 10pt; color: #555; margin-bottom: 8px; }
+    .legend { display: flex; flex-wrap: wrap; gap: 12px; margin: 16px 0; }
+    .legend-item { display: flex; align-items: center; gap: 6px; font-size: 10pt; }
+    .legend-box { width: 18px; height: 18px; border-radius: 3px; }
+    .component-card { border: 1px solid #ddd; border-radius: 6px; padding: 12px; margin: 8px 0; background: #fafafa; }
+    .component-card h4 { margin: 0 0 6px 0; color: #1F3864; font-size: 11pt; }
+    .component-card p { margin: 0; font-size: 10pt; text-align: justify; }
+  </style>
+</head>
+<body>
+
+<div class="portada">
+  <p><strong>Universidad Autonoma de Occidente</strong></p>
+  <p>Facultad de Ingenieria — Computacion en la Nube</p>
+  <br>
+  <h1>MICROPROYECTO 3 — Azure Machine Learning<br>Seccion 2: Propuesta de Diseno</h1>
+  <br>
+  <p><strong>Estudiante:</strong> Marlon Valencia Velosa</p>
+  <p><strong>Correo:</strong> marlon.valencia@uao.edu.co</p>
+  <p><strong>Fecha:</strong> 21 de junio de 2026</p>
+</div>
+
+<div class="pagebreak"></div>
+
+<h1>2. Propuesta de Diseno</h1>
+
+<h2>2.a. Diagrama de Componentes</h2>
+<p>El siguiente diagrama muestra la arquitectura completa de la solucion en Azure, desde la ingesta de datos hasta el endpoint de prediccion en produccion.</p>
+
+<div class="arch-diagram">
+
+  <div class="arch-section">
+    <div class="arch-section-title">CAPA DE DATOS</div>
+    <div class="pipeline-row">
+      <div class="box box-data">Azure Blob Storage<br><small>Dataset CSV</small></div>
+      <div class="arrow">&#8594;</div>
+      <div class="box box-data">Azure ML<br>Data Asset</div>
+    </div>
+  </div>
+
+  <div class="arrow-down">&#8595;</div>
+
+  <div class="arch-section">
+    <div class="arch-section-title">CAPA DE PREPROCESAMIENTO (Azure ML Designer)</div>
+    <div class="pipeline-row">
+      <div class="box box-process">Select Columns</div>
+      <div class="arrow">&#8594;</div>
+      <div class="box box-process">Clean Missing Data</div>
+      <div class="arrow">&#8594;</div>
+      <div class="box box-process">Edit Metadata</div>
+      <div class="arrow">&#8594;</div>
+      <div class="box box-process">Normalize Data</div>
+    </div>
+  </div>
+
+  <div class="arrow-down">&#8595;</div>
+
+  <div class="arch-section">
+    <div class="arch-section-title">CAPA DE ENTRENAMIENTO</div>
+    <div class="pipeline-row">
+      <div class="box box-process">Split Data<br><small>80% / 20%</small></div>
+      <div class="arrow">&#8594;</div>
+      <div class="box box-model">Two-Class Boosted<br>Decision Tree</div>
+      <div class="arrow">&#8594;</div>
+      <div class="box box-model">Train Model</div>
+    </div>
+  </div>
+
+  <div class="arrow-down">&#8595;</div>
+
+  <div class="arch-section">
+    <div class="arch-section-title">CAPA DE EVALUACION</div>
+    <div class="pipeline-row">
+      <div class="box box-eval">Score Model</div>
+      <div class="arrow">&#8594;</div>
+      <div class="box box-eval">Evaluate Model</div>
+    </div>
+  </div>
+
+  <div class="arrow-down">&#8595;</div>
+
+  <div class="arch-section">
+    <div class="arch-section-title">CAPA DE DESPLIEGUE</div>
+    <div class="pipeline-row">
+      <div class="box box-deploy">Real-time Endpoint</div>
+      <div class="arrow">&#8594;</div>
+      <div class="box box-deploy">API REST (JSON)</div>
+      <div class="arrow">&#8594;</div>
+      <div class="box box-deploy">CRM RetailCo</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="legend">
+  <strong>Leyenda:</strong>&nbsp;
+  <div class="legend-item"><div class="legend-box" style="background:#0078D4;"></div> Datos</div>
+  <div class="legend-item"><div class="legend-box" style="background:#107C10;"></div> Preprocesamiento</div>
+  <div class="legend-item"><div class="legend-box" style="background:#881798;"></div> Modelo ML</div>
+  <div class="legend-item"><div class="legend-box" style="background:#D83B01;"></div> Evaluacion</div>
+  <div class="legend-item"><div class="legend-box" style="background:#004B50;"></div> Despliegue</div>
+</div>
+
+<div class="pagebreak"></div>
+
+<h2>2.b. Relacion y Flujo de Trabajo entre Componentes</h2>
+
+<table>
+  <tr><th>Paso</th><th>Componente</th><th>Entrada</th><th>Salida</th></tr>
+  <tr><td>1</td><td>Azure Blob Storage</td><td>Archivo CSV del dataset de churn</td><td>Datos almacenados en la nube</td></tr>
+  <tr><td>2</td><td>Data Asset</td><td>Ruta del archivo en Blob Storage</td><td>Dataset registrado en Azure ML</td></tr>
+  <tr><td>3</td><td>Select Columns in Dataset</td><td>Dataset completo (21 columnas)</td><td>Dataset con columnas relevantes</td></tr>
+  <tr><td>4</td><td>Clean Missing Data</td><td>Dataset con posibles valores nulos</td><td>Dataset limpio</td></tr>
+  <tr><td>5</td><td>Edit Metadata</td><td>Dataset limpio</td><td>Columna "Churn" marcada como etiqueta</td></tr>
+  <tr><td>6</td><td>Normalize Data</td><td>Variables numericas originales</td><td>Variables en rango [0,1]</td></tr>
+  <tr><td>7</td><td>Split Data</td><td>Dataset normalizado</td><td>80% entrenamiento / 20% prueba</td></tr>
+  <tr><td>8</td><td>Two-Class Boosted Decision Tree</td><td>Hiperparametros</td><td>Algoritmo configurado</td></tr>
+  <tr><td>9</td><td>Train Model</td><td>Algoritmo + datos entrenamiento</td><td>Modelo entrenado</td></tr>
+  <tr><td>10</td><td>Score Model</td><td>Modelo + datos prueba</td><td>Predicciones con probabilidad de churn</td></tr>
+  <tr><td>11</td><td>Evaluate Model</td><td>Predicciones vs. valores reales</td><td>Metricas: AUC, Accuracy, Precision, Recall</td></tr>
+  <tr><td>12</td><td>Real-time Endpoint</td><td>Modelo entrenado</td><td>Endpoint REST para consultas en tiempo real</td></tr>
+</table>
+
+<h2>2.c. Descripcion de los Componentes</h2>
+
+<div class="component-card">
+  <h4>1. Azure Blob Storage</h4>
+  <p>Servicio de almacenamiento de objetos de Azure. Almacena el dataset CSV de forma persistente y segura. Es el punto de entrada de los datos al pipeline de Azure ML.</p>
+</div>
+
+<div class="component-card">
+  <h4>2. Azure ML Data Asset</h4>
+  <p>Recurso de datos registrado en Azure Machine Learning que apunta al archivo en Blob Storage. Permite versionar los datasets y reutilizarlos en multiples experimentos.</p>
+</div>
+
+<div class="component-card">
+  <h4>3. Select Columns in Dataset</h4>
+  <p>Filtra las columnas del dataset conservando solo las variables mas relevantes para el modelo: tenure, MonthlyCharges, TotalCharges, Contract, PaymentMethod e InternetService, entre otras.</p>
+</div>
+
+<div class="component-card">
+  <h4>4. Clean Missing Data</h4>
+  <p>Limpia valores faltantes del dataset. Se configura para eliminar filas con valores nulos o reemplazarlos por la media o moda segun el tipo de variable.</p>
+</div>
+
+<div class="component-card">
+  <h4>5. Edit Metadata</h4>
+  <p>Define el rol de cada columna en el pipeline. Marca la columna "Churn" como la etiqueta (variable objetivo) que el modelo debe aprender a predecir.</p>
+</div>
+
+<div class="component-card">
+  <h4>6. Normalize Data</h4>
+  <p>Aplica normalizacion MinMax a las variables numericas continuas. Mejora la convergencia del algoritmo y evita que variables con mayor magnitud dominen el entrenamiento.</p>
+</div>
+
+<div class="component-card">
+  <h4>7. Split Data</h4>
+  <p>Divide el dataset en dos subconjuntos: 80% para entrenamiento y 20% para evaluacion. La division es aleatoria con semilla fija para garantizar reproducibilidad.</p>
+</div>
+
+<div class="component-card">
+  <h4>8. Two-Class Boosted Decision Tree</h4>
+  <p>Algoritmo de clasificacion binaria basado en arboles de decision con boosting. Combina multiples arboles debiles para crear un clasificador fuerte. Es robusto con datos tabulares y maneja bien el desbalance de clases.</p>
+</div>
+
+<div class="component-card">
+  <h4>9. Train Model</h4>
+  <p>Ejecuta el entrenamiento combinando el algoritmo con los datos de entrenamiento. Produce un modelo serializado listo para hacer predicciones sobre nuevos datos.</p>
+</div>
+
+<div class="component-card">
+  <h4>10. Score Model</h4>
+  <p>Aplica el modelo entrenado al conjunto de prueba. Para cada cliente genera una probabilidad de churn (0.0 a 1.0) y una etiqueta predicha (True/False).</p>
+</div>
+
+<div class="component-card">
+  <h4>11. Evaluate Model</h4>
+  <p>Calcula las metricas de desempeno comparando predicciones con valores reales. Genera la curva ROC, AUC, Accuracy, Precision y Recall para validar la calidad del modelo.</p>
+</div>
+
+<div class="component-card">
+  <h4>12. Real-time Endpoint (Azure ML)</h4>
+  <p>Despliega el modelo entrenado como servicio web REST en un contenedor de Azure. Recibe datos JSON de un cliente y retorna la prediccion de churn en tiempo real. Es consumido por el CRM de RetailCo para ejecutar campanas de retencion automatizadas.</p>
+</div>
+
+</body>
+</html>
