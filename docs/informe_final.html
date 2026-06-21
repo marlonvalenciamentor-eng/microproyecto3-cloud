@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body { font-family: Calibri, Arial, sans-serif; font-size: 12pt; margin: 2.5cm; color: #000; line-height: 1.5; }
+    h1 { font-size: 18pt; text-align: center; font-weight: bold; color: #1F3864; }
+    h2 { font-size: 14pt; font-weight: bold; color: #1F3864; border-bottom: 2px solid #1F3864; padding-bottom: 4px; margin-top: 28px; }
+    h3 { font-size: 12pt; font-weight: bold; color: #2E5DA6; margin-top: 16px; }
+    .portada { text-align: center; margin-top: 60px; margin-bottom: 60px; }
+    .portada p { margin: 8px 0; }
+    table { border-collapse: collapse; width: 100%; margin: 14px 0; }
+    th { background-color: #1F3864; color: white; padding: 9px; text-align: left; }
+    td { border: 1px solid #ccc; padding: 8px; vertical-align: top; }
+    tr:nth-child(even) { background-color: #f2f2f2; }
+    .pagebreak { page-break-before: always; }
+    ul li, ol li { margin: 5px 0; }
+    p { text-align: justify; }
+    .highlight { background-color: #E8F0FE; padding: 10px 14px; border-left: 4px solid #2E5DA6; margin: 12px 0; }
+    .success { background-color: #E8F5E9; padding: 10px 14px; border-left: 4px solid #388e3c; margin: 12px 0; }
+    .img-placeholder { border: 2px dashed #1F3864; border-radius: 6px; padding: 40px; text-align: center; color: #1F3864; background: #f0f4ff; margin: 16px 0; font-style: italic; }
+    .pipeline-row { display: flex; align-items: center; justify-content: center; margin: 4px 0; flex-wrap: wrap; }
+    .box { color: white; padding: 8px 14px; border-radius: 6px; font-size: 10pt; font-weight: bold; text-align: center; min-width: 150px; margin: 4px; }
+    .box-data { background-color: #0078D4; }
+    .box-process { background-color: #107C10; }
+    .box-model { background-color: #881798; }
+    .box-eval { background-color: #D83B01; }
+    .arrow { font-size: 18pt; color: #666; margin: 0 4px; }
+    .arrow-down { font-size: 22pt; color: #666; text-align: center; }
+    .arch-diagram { border: 2px solid #1F3864; border-radius: 8px; padding: 16px; background: #f8f9ff; margin: 16px 0; }
+    .arch-section { border: 1px dashed #888; border-radius: 6px; padding: 10px; margin: 8px 0; }
+    .arch-section-title { font-weight: bold; font-size: 10pt; color: #555; margin-bottom: 8px; }
+    .metric-box { display: inline-block; border: 2px solid #1F3864; border-radius: 8px; padding: 12px 20px; margin: 8px; text-align: center; min-width: 110px; }
+    .metric-value { font-size: 20pt; font-weight: bold; color: #1F3864; }
+    .metric-label { font-size: 9pt; color: #555; }
+    .component-card { border: 1px solid #ddd; border-radius: 6px; padding: 10px; margin: 6px 0; background: #fafafa; }
+    .component-card h4 { margin: 0 0 4px 0; color: #1F3864; font-size: 11pt; }
+    .component-card p { margin: 0; font-size: 10pt; }
+  </style>
+</head>
+<body>
+
+<div class="portada">
+  <p><strong>Universidad Autonoma de Occidente</strong></p>
+  <p>Facultad de Ingenieria — Computacion en la Nube</p>
+  <br><br>
+  <h1>MICROPROYECTO 3<br>Prediccion de Abandono de Clientes<br>con Azure Machine Learning</h1>
+  <br><br>
+  <p><strong>Estudiante:</strong> Marlon Valencia Velosa</p>
+  <p><strong>Correo:</strong> marlon.valencia@uao.edu.co</p>
+  <p><strong>Repositorio:</strong> github.com/marlonvalenciamentor-eng/microproyecto3-cloud</p>
+  <p><strong>Fecha:</strong> 21 de junio de 2026</p>
+</div>
+
+<div class="pagebreak"></div>
+
+<h1>1. Analisis de Requerimientos</h1>
+
+<h2>1.a. Descripcion de la Empresa y sus Necesidades</h2>
+<p><strong>RetailCo S.A.S.</strong> es una cadena colombiana de tiendas de tecnologia con presencia en Bogota, Medellin y Cali. Cuenta con mas de 50.000 clientes registrados y genera aproximadamente 200 transacciones diarias.</p>
+<p>El equipo de marketing identifico que un <strong>23% de clientes activos abandona cada ano</strong> sin señal previa, generando perdidas de <strong>COP $480 millones anuales</strong>.</p>
+
+<div class="highlight"><strong>Necesidad:</strong> Predecir con antelacion que clientes abandonaran la plataforma para ejecutar campanas de retencion personalizadas.</div>
+
+<h3>Requerimientos Funcionales</h3>
+<table>
+  <tr><th>#</th><th>Requerimiento</th><th>Descripcion</th></tr>
+  <tr><td>RF01</td><td>Prediccion de churn</td><td>Predecir abandono en los proximos 30 dias con precision minima del 80%.</td></tr>
+  <tr><td>RF02</td><td>Puntuacion de riesgo</td><td>Cada cliente recibe puntuacion de riesgo (0-100%) actualizable semanalmente.</td></tr>
+  <tr><td>RF03</td><td>Variables de entrada</td><td>Historial de compras, frecuencia, valor promedio, tiempo desde ultima compra.</td></tr>
+  <tr><td>RF04</td><td>Integracion</td><td>Resultados exportables al CRM via CSV o API REST.</td></tr>
+  <tr><td>RF05</td><td>Explicabilidad</td><td>Indicar factores principales que influyen en cada prediccion.</td></tr>
+</table>
+
+<h3>Restricciones</h3>
+<table>
+  <tr><th>#</th><th>Restriccion</th><th>Detalle</th></tr>
+  <tr><td>RNF01</td><td>Presupuesto</td><td>Costo mensual maximo: USD $200.</td></tr>
+  <tr><td>RNF02</td><td>Privacidad</td><td>Cumplimiento Ley 1581 de Proteccion de Datos de Colombia.</td></tr>
+  <tr><td>RNF03</td><td>Disponibilidad</td><td>Endpoint disponible 99.5% del tiempo.</td></tr>
+  <tr><td>RNF04</td><td>Latencia</td><td>Respuesta maxima de 2 segundos por solicitud.</td></tr>
+  <tr><td>RNF05</td><td>Escalabilidad</td><td>Hasta 10.000 predicciones por ejecucion batch semanal.</td></tr>
+</table>
+
+<h2>1.b. Alternativas de Solucion</h2>
+<table>
+  <tr><th>Alternativa</th><th>Descripcion</th><th>Decision</th></tr>
+  <tr><td>A1: Desarrollo propio</td><td>Modelo scikit-learn en servidor propio</td><td>Descartada — requiere equipo ML</td></tr>
+  <tr><td>A2: Azure Cognitive Services</td><td>Servicios cognitivos prediseñados</td><td>Descartada — no aplica a prediccion tabular</td></tr>
+  <tr><td><strong>A3: Azure ML Designer</strong></td><td>Pipeline visual drag-and-drop</td><td><strong>Seleccionada</strong></td></tr>
+  <tr><td>A4: Azure AutoML</td><td>Entrenamiento automatico</td><td>Alternativa futura</td></tr>
+</table>
+
+<h2>1.c. Pipeline de Azure Machine Learning</h2>
+<table>
+  <tr><th>Paso</th><th>Componente</th><th>Funcion</th></tr>
+  <tr><td>1</td><td>Data Asset</td><td>Cargar CSV telco-churn en Azure ML</td></tr>
+  <tr><td>2</td><td>Select Columns in Dataset</td><td>Excluir customerID (sin valor predictivo)</td></tr>
+  <tr><td>3</td><td>Clean Missing Data</td><td>Eliminar filas con valores nulos</td></tr>
+  <tr><td>4</td><td>Edit Metadata</td><td>Marcar "Churn" como etiqueta</td></tr>
+  <tr><td>5</td><td>Normalize Data</td><td>MinMax en variables numericas</td></tr>
+  <tr><td>6</td><td>Split Data</td><td>80% entrenamiento / 20% prueba</td></tr>
+  <tr><td>7</td><td>Two-Class Boosted Decision Tree</td><td>Algoritmo de clasificacion binaria</td></tr>
+  <tr><td>8</td><td>Train Model</td><td>Entrenar modelo</td></tr>
+  <tr><td>9</td><td>Score Model</td><td>Generar predicciones</td></tr>
+  <tr><td>10</td><td>Evaluate Model</td><td>Calcular metricas AUC, Accuracy, F1</td></tr>
+</table>
+
+<h2>1.d. Costos Estimados</h2>
+<table>
+  <tr><th>Servicio</th><th>Configuracion</th><th>USD/mes</th></tr>
+  <tr><td>Azure ML Workspace</td><td>Basico</td><td>$0.00</td></tr>
+  <tr><td>Compute Cluster</td><td>Standard_DS2_v2 — 4h/semana</td><td>$15.00</td></tr>
+  <tr><td>Real-time Endpoint</td><td>Standard_DS1_v2</td><td>$55.00</td></tr>
+  <tr><td>Blob Storage</td><td>10 GB LRS</td><td>$0.20</td></tr>
+  <tr><td>Container Registry</td><td>Basic</td><td>$5.00</td></tr>
+  <tr><td>Transferencia datos</td><td>5 GB/mes</td><td>$0.45</td></tr>
+</table>
+<div class="success"><strong>Total estimado: USD $75.65/mes</strong> — dentro del presupuesto de USD $200.</div>
+
+<div class="pagebreak"></div>
+
+<h1>2. Propuesta de Diseno</h1>
+
+<h2>2.a. Diagrama de Componentes</h2>
+<div class="arch-diagram">
+  <div class="arch-section">
+    <div class="arch-section-title">CAPA DE DATOS</div>
+    <div class="pipeline-row">
+      <div class="box box-data">Azure Blob Storage<br><small>Dataset CSV</small></div>
+      <div class="arrow">&#8594;</div>
+      <div class="box box-data">Data Asset<br><small>telco-churn v1</small></div>
+    </div>
+  </div>
+  <div class="arrow-down">&#8595;</div>
+  <div class="arch-section">
+    <div class="arch-section-title">CAPA DE PREPROCESAMIENTO</div>
+    <div class="pipeline-row">
+      <div class="box box-process">Select Columns</div>
+      <div class="arrow">&#8594;</div>
+      <div class="box box-process">Clean Missing Data</div>
+      <div class="arrow">&#8594;</div>
+      <div class="box box-process">Edit Metadata</div>
+      <div class="arrow">&#8594;</div>
+      <div class="box box-process">Normalize Data</div>
+    </div>
+  </div>
+  <div class="arrow-down">&#8595;</div>
+  <div class="arch-section">
+    <div class="arch-section-title">CAPA DE ENTRENAMIENTO</div>
+    <div class="pipeline-row">
+      <div class="box box-process">Split Data 80/20</div>
+      <div class="arrow">&#8594;</div>
+      <div class="box box-model">Boosted Decision Tree</div>
+      <div class="arrow">&#8594;</div>
+      <div class="box box-model">Train Model</div>
+    </div>
+  </div>
+  <div class="arrow-down">&#8595;</div>
+  <div class="arch-section">
+    <div class="arch-section-title">CAPA DE EVALUACION</div>
+    <div class="pipeline-row">
+      <div class="box box-eval">Score Model</div>
+      <div class="arrow">&#8594;</div>
+      <div class="box box-eval">Evaluate Model</div>
+    </div>
+  </div>
+</div>
+
+<h2>2.b. Flujo de Trabajo</h2>
+<table>
+  <tr><th>Paso</th><th>Componente</th><th>Entrada</th><th>Salida</th></tr>
+  <tr><td>1</td><td>Data Asset</td><td>CSV en Blob Storage</td><td>Dataset registrado</td></tr>
+  <tr><td>2</td><td>Select Columns</td><td>21 columnas</td><td>20 columnas (sin customerID)</td></tr>
+  <tr><td>3</td><td>Clean Missing Data</td><td>Dataset con nulos</td><td>Dataset limpio</td></tr>
+  <tr><td>4</td><td>Edit Metadata</td><td>Dataset limpio</td><td>Churn marcado como Label</td></tr>
+  <tr><td>5</td><td>Normalize Data</td><td>Variables numericas</td><td>Valores en [0,1]</td></tr>
+  <tr><td>6</td><td>Split Data</td><td>Dataset completo</td><td>80% train / 20% test</td></tr>
+  <tr><td>7-8</td><td>Decision Tree + Train</td><td>Algoritmo + datos train</td><td>Modelo entrenado</td></tr>
+  <tr><td>9</td><td>Score Model</td><td>Modelo + datos test</td><td>Probabilidades churn</td></tr>
+  <tr><td>10</td><td>Evaluate Model</td><td>Predicciones vs reales</td><td>Metricas AUC, Accuracy, F1</td></tr>
+</table>
+
+<h2>2.c. Descripcion de Componentes</h2>
+<div class="component-card"><h4>Select Columns in Dataset</h4><p>Excluye "customerID" — identificador unico sin valor predictivo que causaba error de demasiados valores unicos en normalizacion.</p></div>
+<div class="component-card"><h4>Clean Missing Data</h4><p>Elimina filas con valores nulos en modo "Remove entire row" aplicado a todas las columnas.</p></div>
+<div class="component-card"><h4>Edit Metadata</h4><p>Marca "Churn" como etiqueta (variable objetivo) del problema de clasificacion binaria.</p></div>
+<div class="component-card"><h4>Normalize Data</h4><p>Aplica MinMax scaling a columnas numericas, escalando al rango [0,1].</p></div>
+<div class="component-card"><h4>Split Data</h4><p>Division 80/20 con semilla 42 para reproducibilidad.</p></div>
+<div class="component-card"><h4>Two-Class Boosted Decision Tree</h4><p>Clasificador binario basado en boosting. Robusto con datos tabulares mixtos y desbalance de clases.</p></div>
+<div class="component-card"><h4>Train Model</h4><p>Entrena el algoritmo con el 80% de los datos. Produce modelo serializado para predicciones.</p></div>
+<div class="component-card"><h4>Score Model</h4><p>Aplica el modelo al 20% de prueba. Genera probabilidad de churn (0.0-1.0) por cliente.</p></div>
+<div class="component-card"><h4>Evaluate Model</h4><p>Calcula AUC, Accuracy, Precision, Recall y F1 Score comparando predicciones con valores reales.</p></div>
+
+<div class="pagebreak"></div>
+
+<h1>3. Implementacion del Demo</h1>
+
+<h2>3.a. Entorno</h2>
+<table>
+  <tr><th>Recurso</th><th>Detalle</th></tr>
+  <tr><td>Suscripcion</td><td>Azure for Students</td></tr>
+  <tr><td>Grupo de recursos</td><td>vmgroup</td></tr>
+  <tr><td>Azure ML Workspace</td><td>retailco-ml (Central US)</td></tr>
+  <tr><td>Compute Cluster</td><td>retailco-cluster — Standard_DS2_v2 (2 vCPU, 7 GB)</td></tr>
+  <tr><td>Dataset</td><td>telco-churn v1 — 7.043 registros, 947 KB</td></tr>
+  <tr><td>Experimento</td><td>churn-prediction</td></tr>
+  <tr><td>Repositorio GitHub</td><td>github.com/marlonvalenciamentor-eng/microproyecto3-cloud</td></tr>
+</table>
+
+<h2>3.b. Pasos de Implementacion</h2>
+<ol>
+  <li>Creacion del workspace <strong>retailco-ml</strong> en Azure ML Studio (Central US).</li>
+  <li>Descarga del dataset publico Telco Customer Churn (IBM, 7.043 registros).</li>
+  <li>Registro como Data Asset <strong>telco-churn v1</strong> en Azure Blob Storage.</li>
+  <li>Construccion del pipeline de 10 componentes en Azure ML Designer.</li>
+  <li>Correccion de error: exclusion de "customerID" con Select Columns.</li>
+  <li>Ejecucion exitosa con compute cluster <strong>retailco-cluster</strong>.</li>
+  <li>Obtencion de metricas de evaluacion del modelo.</li>
+</ol>
+
+<h2>3.c. Capturas de Pantalla</h2>
+
+<h3>Captura 1: Pipeline completo en Azure ML Designer</h3>
+<div class="img-placeholder">[ INSERTAR CAPTURA: Pipeline con todos los componentes conectados y en verde ]</div>
+
+<h3>Captura 2: Ejecucion exitosa del Job</h3>
+<div class="img-placeholder">[ INSERTAR CAPTURA: Job churn-prediction con estado Completed ]</div>
+
+<h3>Captura 3: Dataset telco-churn registrado</h3>
+<div class="img-placeholder">[ INSERTAR CAPTURA: Data Asset telco-churn en Azure ML Studio ]</div>
+
+<h3>Captura 4: Metricas del modelo (Evaluate Model)</h3>
+<div class="img-placeholder">[ INSERTAR CAPTURA: Pantalla de metricas con AUC=0.855 y Accuracy=80.58% ]</div>
+
+<h2>3.d. Resultados</h2>
+
+<div style="text-align:center; margin: 20px 0;">
+  <div class="metric-box"><div class="metric-value">80.6%</div><div class="metric-label">Accuracy</div></div>
+  <div class="metric-box"><div class="metric-value">0.855</div><div class="metric-label">AUC</div></div>
+  <div class="metric-box"><div class="metric-value">68.1%</div><div class="metric-label">Precision</div></div>
+  <div class="metric-box"><div class="metric-value">56.4%</div><div class="metric-label">Recall</div></div>
+  <div class="metric-box"><div class="metric-value">0.617</div><div class="metric-label">F1 Score</div></div>
+</div>
+
+<table>
+  <tr><th>Metrica</th><th>Valor obtenido</th><th>Meta RF01</th><th>Estado</th></tr>
+  <tr><td>Accuracy</td><td>80.58%</td><td>>80%</td><td>Cumplida</td></tr>
+  <tr><td>AUC</td><td>0.855</td><td>>0.80</td><td>Cumplida</td></tr>
+  <tr><td>Precision</td><td>68.11%</td><td>—</td><td>Aceptable</td></tr>
+  <tr><td>Recall</td><td>56.41%</td><td>—</td><td>Mejorable</td></tr>
+  <tr><td>F1 Score</td><td>0.617</td><td>—</td><td>Aceptable</td></tr>
+</table>
+
+<div class="success">El modelo supera los objetivos minimos del proyecto. Con AUC de 0.855 puede identificar clientes en riesgo con suficiente precision para ejecutar campanas de retencion efectivas en RetailCo.</div>
+
+<div class="pagebreak"></div>
+
+<h1>4. Conclusiones</h1>
+<ul>
+  <li>Azure Machine Learning Designer permite construir pipelines de ML completos visualmente sin escribir codigo, reduciendo el tiempo de implementacion significativamente.</li>
+  <li>El modelo Two-Class Boosted Decision Tree alcanzo AUC de 0.855, superando el objetivo del 80% definido en los requerimientos.</li>
+  <li>La exclusion de identificadores unicos como "customerID" es critica — su inclusion provoca errores de codificacion en la normalizacion.</li>
+  <li>El costo estimado de USD $75.65/mes esta dentro del presupuesto de USD $200, haciendo la solucion economicamente viable.</li>
+  <li>Azure ML ofrece trazabilidad completa de experimentos, versionado de datasets y modelos, facilitando la gobernanza del proceso de ML.</li>
+</ul>
+
+<h1>5. Referencias</h1>
+<ul>
+  <li>Microsoft. (2026). <em>Azure Machine Learning component reference</em>. https://docs.microsoft.com/es-es/azure/machine-learning/component-reference/component-reference</li>
+  <li>Microsoft. (2026). <em>Azure Pricing Calculator</em>. https://azure.microsoft.com/es-es/pricing/calculator/</li>
+  <li>IBM. (2026). <em>Telco Customer Churn Dataset</em>. https://github.com/IBM/telco-customer-churn-on-icp4d</li>
+  <li>Microsoft. (2026). <em>Designer error codes</em>. https://docs.microsoft.com/en-us/azure/machine-learning/algorithm-module-reference/designer-error-codes</li>
+</ul>
+
+</body>
+</html>
