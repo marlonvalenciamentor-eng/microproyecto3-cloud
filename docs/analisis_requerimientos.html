@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body { font-family: Calibri, Arial, sans-serif; font-size: 12pt; margin: 2.5cm; color: #000; line-height: 1.5; }
+    h1 { font-size: 18pt; text-align: center; font-weight: bold; color: #1F3864; }
+    h2 { font-size: 14pt; font-weight: bold; color: #1F3864; border-bottom: 2px solid #1F3864; padding-bottom: 4px; margin-top: 28px; }
+    h3 { font-size: 12pt; font-weight: bold; color: #2E5DA6; margin-top: 16px; }
+    .portada { text-align: center; margin-top: 60px; margin-bottom: 60px; }
+    .portada p { margin: 8px 0; }
+    table { border-collapse: collapse; width: 100%; margin: 14px 0; }
+    th { background-color: #1F3864; color: white; padding: 9px; text-align: left; }
+    td { border: 1px solid #ccc; padding: 8px; vertical-align: top; }
+    tr:nth-child(even) { background-color: #f2f2f2; }
+    .pagebreak { page-break-before: always; }
+    ul li, ol li { margin: 5px 0; }
+    p { text-align: justify; }
+    .highlight { background-color: #E8F0FE; padding: 10px 14px; border-left: 4px solid #2E5DA6; margin: 12px 0; }
+    .costo-total { background-color: #E8F5E9; padding: 10px 14px; border-left: 4px solid #388e3c; font-weight: bold; margin: 12px 0; }
+  </style>
+</head>
+<body>
+
+<div class="portada">
+  <p><strong>Universidad Autonoma de Occidente</strong></p>
+  <p>Facultad de Ingenieria — Computacion en la Nube</p>
+  <br><br>
+  <h1>MICROPROYECTO 3<br>Azure Machine Learning<br>Prediccion de Abandono de Clientes</h1>
+  <br><br>
+  <p><strong>Estudiante:</strong> Marlon Valencia Velosa</p>
+  <p><strong>Correo:</strong> marlon.valencia@uao.edu.co</p>
+  <p><strong>Repositorio:</strong> github.com/marlonvalenciamentor-eng/microproyecto3-cloud</p>
+  <p><strong>Fecha:</strong> 21 de junio de 2026</p>
+</div>
+
+<div class="pagebreak"></div>
+
+<h1>1. Analisis de Requerimientos</h1>
+
+<h2>1.a. Descripcion de la Empresa y sus Necesidades</h2>
+
+<h3>Descripcion de la Empresa</h3>
+<p>
+  <strong>RetailCo S.A.S.</strong> es una cadena colombiana de tiendas de tecnologia con presencia en Bogota, Medellin y Cali. Cuenta con mas de 50.000 clientes registrados en su plataforma de fidelizacion y genera aproximadamente 200 transacciones diarias a traves de sus canales fisico y digital.
+</p>
+<p>
+  La empresa ofrece productos de electronica de consumo, accesorios tecnologicos y servicios de garantia extendida. Su modelo de negocio depende en gran medida de la retencion de clientes recurrentes, quienes representan el 68% de los ingresos totales.
+</p>
+
+<h3>Problema Identificado</h3>
+<p>
+  El equipo de marketing de RetailCo ha identificado que un <strong>23% de sus clientes activos deja de comprar cada ano</strong> sin ninguna senal de alerta previa. El costo de adquirir un nuevo cliente es 5 veces mayor que retener uno existente. La empresa pierde aproximadamente <strong>COP $480 millones anuales</strong> debido al abandono no anticipado de clientes.
+</p>
+
+<div class="highlight">
+  <strong>Necesidad principal:</strong> Predecir con antelacion que clientes tienen alta probabilidad de abandonar la plataforma, para que el equipo de retencion pueda actuar con campanas personalizadas antes de que ocurra el abandono.
+</div>
+
+<h3>Requerimientos Funcionales</h3>
+<table>
+  <tr><th>#</th><th>Requerimiento</th><th>Descripcion</th></tr>
+  <tr><td>RF01</td><td>Prediccion de churn</td><td>El sistema debe predecir si un cliente abandonara en los proximos 30 dias con precision minima del 80%.</td></tr>
+  <tr><td>RF02</td><td>Puntuacion de riesgo</td><td>Cada cliente debe recibir una puntuacion de riesgo (0-100%) actualizable semanalmente.</td></tr>
+  <tr><td>RF03</td><td>Variables de entrada</td><td>El modelo debe considerar historial de compras, frecuencia, valor promedio, tiempo desde ultima compra y uso del programa de fidelizacion.</td></tr>
+  <tr><td>RF04</td><td>Integracion</td><td>Los resultados deben exportarse al CRM de la empresa en formato CSV o via API REST.</td></tr>
+  <tr><td>RF05</td><td>Explicabilidad</td><td>El sistema debe indicar los principales factores que influyen en la prediccion de cada cliente.</td></tr>
+</table>
+
+<h3>Requerimientos No Funcionales y Restricciones</h3>
+<table>
+  <tr><th>#</th><th>Restriccion</th><th>Detalle</th></tr>
+  <tr><td>RNF01</td><td>Presupuesto</td><td>El costo mensual no debe superar USD $200.</td></tr>
+  <tr><td>RNF02</td><td>Privacidad</td><td>Los datos de clientes deben cumplir con la Ley 1581 de Proteccion de Datos de Colombia.</td></tr>
+  <tr><td>RNF03</td><td>Disponibilidad</td><td>El endpoint de prediccion debe estar disponible 99.5% del tiempo.</td></tr>
+  <tr><td>RNF04</td><td>Latencia</td><td>La respuesta del endpoint no debe superar 2 segundos por solicitud.</td></tr>
+  <tr><td>RNF05</td><td>Escalabilidad</td><td>El sistema debe soportar hasta 10.000 predicciones por ejecucion batch semanal.</td></tr>
+</table>
+
+<div class="pagebreak"></div>
+
+<h2>1.b. Generacion y Seleccion de Alternativas de Solucion</h2>
+
+<table>
+  <tr><th>Alternativa</th><th>Descripcion</th><th>Ventajas</th><th>Desventajas</th><th>Seleccion</th></tr>
+  <tr>
+    <td><strong>A1: Desarrollo propio</strong></td>
+    <td>Modelo ML con scikit-learn en servidor propio.</td>
+    <td>Control total, sin costo de plataforma.</td>
+    <td>Requiere equipo de data science e infraestructura propia.</td>
+    <td>Descartada</td>
+  </tr>
+  <tr>
+    <td><strong>A2: Azure Cognitive Services</strong></td>
+    <td>Servicios cognitivos prediseñados de Azure.</td>
+    <td>Facil de implementar.</td>
+    <td>No aplica al problema de churn — son servicios de percepcion.</td>
+    <td>Descartada</td>
+  </tr>
+  <tr>
+    <td><strong>A3: Azure ML Designer</strong></td>
+    <td>Pipeline visual con componentes drag-and-drop para clasificacion.</td>
+    <td>Visual, sin codigo, integrado con Azure, despliegue nativo REST.</td>
+    <td>Requiere workspace de Azure ML.</td>
+    <td><strong>Seleccionada</strong></td>
+  </tr>
+  <tr>
+    <td><strong>A4: Azure AutoML</strong></td>
+    <td>Entrenamiento automatico de multiples modelos.</td>
+    <td>Automatizado, alta precision.</td>
+    <td>Mayor costo computacional, menos control.</td>
+    <td>Alternativa futura</td>
+  </tr>
+</table>
+
+<div class="highlight">
+  <strong>Alternativa seleccionada: A3 — Azure Machine Learning Designer.</strong>
+  Permite construir el pipeline visualmente, entrenar un modelo de clasificacion binaria (churn / no churn), evaluar su desempeno y desplegarlo como endpoint REST, todo dentro del ecosistema de Azure.
+</div>
+
+<h2>1.c. Propuesta del Pipeline de Azure Machine Learning</h2>
+
+<h3>Dataset</h3>
+<p>
+  Se utilizara el dataset publico <strong>Telco Customer Churn</strong> (IBM Sample Data). Contiene 7.043 registros de clientes con 21 variables incluyendo datos de servicio, contrato, facturacion y la variable objetivo <em>Churn</em> (Si/No).
+</p>
+
+<h3>Componentes del Pipeline</h3>
+<table>
+  <tr><th>Paso</th><th>Componente Azure ML</th><th>Funcion</th></tr>
+  <tr><td>1</td><td>Dataset (Data Asset)</td><td>Cargar el archivo CSV del dataset de churn en Azure ML.</td></tr>
+  <tr><td>2</td><td>Select Columns in Dataset</td><td>Seleccionar las columnas relevantes para el modelo.</td></tr>
+  <tr><td>3</td><td>Clean Missing Data</td><td>Eliminar o imputar valores nulos en el dataset.</td></tr>
+  <tr><td>4</td><td>Edit Metadata</td><td>Marcar la columna "Churn" como etiqueta (variable objetivo).</td></tr>
+  <tr><td>5</td><td>Normalize Data</td><td>Normalizar variables numericas (MinMax scaling).</td></tr>
+  <tr><td>6</td><td>Split Data</td><td>Dividir dataset: 80% entrenamiento / 20% prueba.</td></tr>
+  <tr><td>7</td><td>Two-Class Boosted Decision Tree</td><td>Algoritmo de clasificacion para predecir churn.</td></tr>
+  <tr><td>8</td><td>Train Model</td><td>Entrenar el modelo con los datos de entrenamiento.</td></tr>
+  <tr><td>9</td><td>Score Model</td><td>Aplicar el modelo entrenado a los datos de prueba.</td></tr>
+  <tr><td>10</td><td>Evaluate Model</td><td>Calcular metricas: AUC, Accuracy, Precision, Recall.</td></tr>
+  <tr><td>11</td><td>Real-time Endpoint</td><td>Desplegar el modelo como servicio web REST.</td></tr>
+</table>
+
+<h2>1.d. Calculo Aproximado de Costos</h2>
+<p>Estimacion mensual basada en la calculadora de Azure:</p>
+
+<table>
+  <tr><th>Servicio</th><th>Configuracion</th><th>Costo USD/mes</th></tr>
+  <tr><td>Azure ML Workspace</td><td>Basico — 1 workspace</td><td>$0.00</td></tr>
+  <tr><td>Compute Cluster (entrenamiento)</td><td>Standard_DS2_v2 — 4 horas/semana</td><td>$15.00</td></tr>
+  <tr><td>Real-time Endpoint</td><td>Standard_DS1_v2 — 1 instancia</td><td>$55.00</td></tr>
+  <tr><td>Azure Blob Storage</td><td>Dataset + modelos — 10 GB LRS</td><td>$0.20</td></tr>
+  <tr><td>Azure Container Registry</td><td>Basic tier</td><td>$5.00</td></tr>
+  <tr><td>Transferencia de datos</td><td>Salida estimada 5 GB/mes</td><td>$0.45</td></tr>
+</table>
+
+<div class="costo-total">
+  Costo total estimado mensual: USD $75.65 — dentro del presupuesto maximo de USD $200.
+</div>
+
+<p><em>Para la fase de demo se utilizara la suscripcion Azure for Students con $100 USD de credito gratuito.</em></p>
+
+</body>
+</html>
